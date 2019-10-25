@@ -5,7 +5,7 @@ import {
   TextInput,
   View,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,Image
 } from "react-native";
 import Button from "react-native-button";
 import { AppStyles } from "../AppStyles";
@@ -32,42 +32,52 @@ class LoginScreen extends React.Component {
   onPressLogin = () => {
     const { email, password } = this.state;
     if (email.length <= 0 || password.length <= 0) {
-      alert("Please fill out the required fields.");
+      alert("Vui lòng điền đầy đủ thông tin!.");
       return;
     }
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(response => {
-        const { navigation } = this.props;
-        user_uid = response.user._user.uid;
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(user_uid)
-          .get()
-          .then(function(user) {
-            if (user.exists) {
-              AsyncStorage.setItem("@loggedInUserID:id", user_uid);
-              AsyncStorage.setItem("@loggedInUserID:key", email);
-              AsyncStorage.setItem("@loggedInUserID:password", password);
-              navigation.dispatch({ type: "Login", user: user });
-            } else {
-              alert("User does not exist. Please try again.");
-            }
-          })
-          .catch(function(error) {
-            const { code, message } = error;
-            alert(message);
-          });
-      })
-      .catch(error => {
-        const { code, message } = error;
-        alert(message);
-        // For details of error codes, see the docs
-        // The message contains the default Firebase string
-        // representation of the error
-      });
+    else{
+      if(email=="thientrong" && password=="thientrong"){
+        this.props.navigation.navigate("Homehome");
+
+        // return WelcomeScreen;
+      }
+      else{
+        alert("Tài khoản không đúng. Vui lòng điền lại thông tin");
+      }
+    }
+    // firebase
+    //   .auth()
+    //   .signInWithEmailAndPassword(email, password)
+    //   .then(response => {
+    //     const { navigation } = this.props;
+    //     user_uid = response.user._user.uid;
+    //     firebase
+    //       .firestore()
+    //       .collection("users")
+    //       .doc(user_uid)
+    //       .get()
+    //       .then(function(user) {
+    //         if (user.exists) {
+    //           AsyncStorage.setItem("@loggedInUserID:id", user_uid);
+    //           AsyncStorage.setItem("@loggedInUserID:key", email);
+    //           AsyncStorage.setItem("@loggedInUserID:password", password);
+    //           navigation.dispatch({ type: "Login", user: user });
+    //         } else {
+    //           alert("User does not exist. Please try again.");
+    //         }
+    //       })
+    //       .catch(function(error) {
+    //         const { code, message } = error;
+    //         alert(message);
+    //       });
+    //   })
+    //   .catch(error => {
+    //     const { code, message } = error;
+    //     alert(message);
+    //     // For details of error codes, see the docs
+    //     // The message contains the default Firebase string
+    //     // representation of the error
+    //   });
   };
 
   onPressFacebook = () => {
@@ -180,11 +190,11 @@ class LoginScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={[styles.title, styles.leftTitle]}>Sign In</Text>
+        <Text style={[styles.title, styles.leftTitle]}>Đăng nhập</Text>
         <View style={styles.InputContainer}>
           <TextInput
             style={styles.body}
-            placeholder="E-mail or phone number"
+            placeholder="Tên đăng nhập"
             onChangeText={text => this.setState({ email: text })}
             value={this.state.email}
             placeholderTextColor={AppStyles.color.grey}
@@ -195,7 +205,7 @@ class LoginScreen extends React.Component {
           <TextInput
             style={styles.body}
             secureTextEntry={true}
-            placeholder="Password"
+            placeholder="Mật khẩu"
             onChangeText={text => this.setState({ password: text })}
             value={this.state.password}
             placeholderTextColor={AppStyles.color.grey}
@@ -207,17 +217,56 @@ class LoginScreen extends React.Component {
           style={styles.loginText}
           onPress={() => this.onPressLogin()}
         >
-          Log in
+          Đăng nhập
         </Button>
-        <Text style={styles.or}>OR</Text>
+        <View style={{
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'stretch',
+        justifyContent: 'space-between',
+        marginTop: 40,
+        marginLeft: 20,
+        marginRight: 20
+        }}>
+        
         <Button
           containerStyle={styles.facebookContainer}
           style={styles.facebookText}
           onPress={() => this.onPressFacebook()}
         >
-          Login with Facebook
+         <Image
+            //We are showing the Image from online
+            source={{
+              uri:
+                'http://vuanhonline.com/wp-content/uploads/2019/04/fa1.png',
+            }}
+            //You can also show the image from you project directory like below
+            //source={require('./Images/facebook.png')}
+
+            //Image Style
+            style={styles.ImageIconStyle}
+          />
         </Button>
-        {this.state.loading ? (
+        <Button
+          containerStyle={styles.googleContainer}
+          style={styles.facebookText}
+          onPress={this.onPressGoogle}
+        >
+         <Image
+            //We are showing the Image from online
+            source={{
+              uri:
+                'https://www.trainingtoyou.com/wp-content/uploads/2018/08/2000px-Google__G__Logo.svg_.png',
+            }}
+            //You can also show the image from you project directory like below
+            //source={require('./Images/facebook.png')}
+
+            //Image Style
+            style={styles.ImageIconStyle}
+          />
+        </Button>
+        {/* {this.state.loading ? (
           <ActivityIndicator
             style={{ marginTop: 30 }}
             size="large"
@@ -231,7 +280,28 @@ class LoginScreen extends React.Component {
             color={GoogleSigninButton.Color.Light}
             onPress={this.onPressGoogle}
           />
-        )}
+        )} */}
+
+        <Button
+          containerStyle={styles.googleContainer}
+          // onPress={() => this.onPressFacebook()}
+        >
+         <Image
+            //We are showing the Image from online
+            source={{
+              uri:
+                'http://blogs.vmware.com/management/files/2019/04/25231.png',
+            }}
+            //You can also show the image from you project directory like below
+            //source={require('./Images/facebook.png')}
+
+            //Image Style
+            style={styles.ImageIconStyle}
+          />
+        </Button>
+
+        </View>
+       
       </View>
     );
   }
@@ -296,23 +366,41 @@ const styles = StyleSheet.create({
     color: AppStyles.color.text
   },
   facebookContainer: {
-    width: 192,
-    backgroundColor: AppStyles.color.facebook,
+    width: 80,
+    height: 40,
+    backgroundColor: "#d2eee8",
     borderRadius: AppStyles.borderRadius.main,
     padding: 10,
-    marginTop: 30
+    marginTop: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   facebookText: {
     color: AppStyles.color.white
   },
   googleContainer: {
-    width: 192,
-    height: 48,
-    marginTop: 30
+    width: 80,
+    height: 40,
+    marginTop: 30,
+    padding: 10,
+    marginLeft: 10,
+    backgroundColor: "#d2eee8",
+    borderRadius: AppStyles.borderRadius.main,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
   googleText: {
-    color: AppStyles.color.white
-  }
+    color: AppStyles.color.white,
+  },
+  ImageIconStyle: {
+    padding: 10,
+    margin: 5,
+    height: 30,
+    width: 30,
+    resizeMode: 'stretch',
+
+  },
 });
 
 export default LoginScreen;

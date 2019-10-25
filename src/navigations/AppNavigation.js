@@ -14,6 +14,8 @@ import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
+import home_e from "../screens/Home";
+import Profile from "../screens/Profile";
 import { AppIcon, AppStyles } from "../AppStyles";
 import { Configuration } from "../Configuration";
 import DrawerContainer from "../components/DrawerContainer";
@@ -36,7 +38,9 @@ const LoginStack = createStackNavigator(
   {
     Login: { screen: LoginScreen },
     Signup: { screen: SignupScreen },
-    Welcome: { screen: WelcomeScreen }
+    Welcome: { screen: WelcomeScreen },
+    Homehome: { screen: home_e },
+    profile: { screen: Profile }
   },
   {
     initialRouteName: "Welcome",

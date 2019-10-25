@@ -1,99 +1,54 @@
 import React from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Alert,
+  ActivityIndicator,Image
+} from "react-native";
 import Button from "react-native-button";
 import { AppStyles } from "../AppStyles";
 import firebase from "react-native-firebase";
+import { GoogleSignin, GoogleSigninButton } from "react-native-google-signin";
+import { AsyncStorage } from "react-native";
+const FBSDK = require("react-native-fbsdk");
+const { LoginManager, AccessToken } = FBSDK;
 
-class SignupScreen extends React.Component {
+class Profile extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      loading: true,
-      fullname: "",
-      phone: "",
+      loading: false,
       email: "",
       password: ""
     };
-  }
-
-  componentDidMount() {
-    this.authSubscription = firebase.auth().onAuthStateChanged(user => {
-      this.setState({
-        loading: false,
-        user
-      });
+    GoogleSignin.configure({
+      webClientId:
+        "706061484183-l0l58dds4kg329fh1trbiha1ci5rqm5n.apps.googleusercontent.com"
     });
   }
 
-  componentWillUnmount() {
-    this.authSubscription();
-  }
-
-  onRegister = () => {
-    const { email, password } = this.state;
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(response => {
-        const { navigation } = this.props;
-        const { fullname, phone, email } = this.state;
-        const data = {
-          email: email,
-          fullname: fullname,
-          phone: phone,
-          appIdentifier: "rn-android-universal-listings"
-        };
-        user_uid = response.user._user.uid;
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(user_uid)
-          .set(data);
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(user_uid)
-          .get()
-          .then(function(user) {
-            navigation.dispatch({ type: "Login", user: user });
-          })
-          .catch(function(error) {
-            const { code, message } = error;
-            alert(message);
-          });
-      })
-      .catch(error => {
-        const { code, message } = error;
-        alert(message);
-      });
-  };
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={[styles.title, styles.leftTitle]}>Đăng ký tài khoản SSO</Text>
+        <Text style={[styles.title, styles.leftTitle]}>Thông tin tài khoản</Text>
+        <Text style={marginLeft= 0}>Họ và tên: </Text>
         <View style={styles.InputContainer}>
+       
           <TextInput
             style={styles.body}
             placeholder="Họ và tên"
-            onChangeText={text => this.setState({ fullname: text })}
-            value={this.state.fullname}
+            onChangeText={text => this.setState({ email: text })}
+            value={this.state.email}
             placeholderTextColor={AppStyles.color.grey}
             underlineColorAndroid="transparent"
           />
         </View>
+        <Text style={marginLeft= 0}>Tên đăng nhập:</Text>
         <View style={styles.InputContainer}>
-          <TextInput
-            style={styles.body}
-            placeholder="Số điện thoại"
-            onChangeText={text => this.setState({ phone: text })}
-            value={this.state.phone}
-            placeholderTextColor={AppStyles.color.grey}
-            underlineColorAndroid="transparent"
-          />
-        </View>
-        <View style={styles.InputContainer}>
+       
           <TextInput
             style={styles.body}
             placeholder="Tên đăng nhập"
@@ -103,24 +58,33 @@ class SignupScreen extends React.Component {
             underlineColorAndroid="transparent"
           />
         </View>
+        <Text style={marginLeft= 0}>Mật khẩu: </Text>
         <View style={styles.InputContainer}>
+        
           <TextInput
             style={styles.body}
-            placeholder="Mật khẩu"
             secureTextEntry={true}
+            placeholder="Mật khẩu"
             onChangeText={text => this.setState({ password: text })}
             value={this.state.password}
             placeholderTextColor={AppStyles.color.grey}
             underlineColorAndroid="transparent"
           />
         </View>
-        <Button
-          containerStyle={[styles.facebookContainer, { marginTop: 50 }]}
-          style={styles.facebookText}
-          onPress={() => this.onRegister()}
-        >
-         Đăng ký
-        </Button>
+        <Text style={marginLeft= 0}>Số điện thoại: </Text>
+        <View style={styles.InputContainer}>
+       
+          <TextInput
+            style={styles.body}
+            secureTextEntry={true}
+            placeholder="Số điện thoại"
+            onChangeText={text => this.setState({ password: text })}
+            value={this.state.password}
+            placeholderTextColor={AppStyles.color.grey}
+            underlineColorAndroid="transparent"
+          />
+        </View>
+       
       </View>
     );
   }
@@ -130,6 +94,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center"
+  },
+  or: {
+    fontFamily: AppStyles.fontName.main,
+    color: "black",
+    marginTop: 40,
+    marginBottom: 10
   },
   title: {
     fontSize: AppStyles.fontSize.title,
@@ -179,15 +149,41 @@ const styles = StyleSheet.create({
     color: AppStyles.color.text
   },
   facebookContainer: {
-    width: AppStyles.buttonWidth.main,
-    backgroundColor: AppStyles.color.tint,
+    width: 80,
+    height: 40,
+    backgroundColor: "#d2eee8",
     borderRadius: AppStyles.borderRadius.main,
     padding: 10,
-    marginTop: 30
+    marginTop: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   facebookText: {
     color: AppStyles.color.white
-  }
+  },
+  googleContainer: {
+    width: 80,
+    height: 40,
+    marginTop: 30,
+    padding: 10,
+    marginLeft: 10,
+    backgroundColor: "#d2eee8",
+    borderRadius: AppStyles.borderRadius.main,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  googleText: {
+    color: AppStyles.color.white,
+  },
+  ImageIconStyle: {
+    padding: 10,
+    margin: 5,
+    height: 30,
+    width: 30,
+    resizeMode: 'stretch',
+
+  },
 });
 
-export default SignupScreen;
+export default Profile;

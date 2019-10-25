@@ -4,6 +4,7 @@ import { Text, View, StyleSheet } from "react-native";
 import { AppStyles } from "../AppStyles";
 import { AsyncStorage, ActivityIndicator } from "react-native";
 import firebase from "react-native-firebase";
+import { ImageBackground,Image } from 'react-native'
 
 class WelcomeScreen extends React.Component {
   static navigationOptions = {
@@ -30,22 +31,45 @@ class WelcomeScreen extends React.Component {
     }
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Say hello to your new app</Text>
+      <ImageBackground
+          source={require('../../src/img/background.png')}
+          style={styles.backgroundImage}>
+          <Image source={{uri: 'https://apprecs.org/gp/images/app-icons/300/8b/com.congnhanvienthong.jpg'}} style={{width: 100, height: 100,alignItems: "center"}} />
         <Button
           containerStyle={styles.loginContainer}
           style={styles.loginText}
           onPress={() => this.props.navigation.navigate("Login")}
         >
-          Log In
+          Đăng nhập
         </Button>
         <Button
           containerStyle={styles.signupContainer}
           style={styles.signupText}
           onPress={() => this.props.navigation.navigate("Signup")}
         >
-          Sign Up
+          Đăng ký
         </Button>
-      </View>
+      </ImageBackground>
+  </View>
+      // <View style={styles.container}>
+      //    <Image source={require('../../src/img/background.png')} style= {styles.backgroundImage} resizeMode={Image.resizeMode.sretch}></Image>
+      //   <Text style={styles.title}>Say hello to your new app</Text>
+      //   <Button
+      //     containerStyle={styles.loginContainer}
+      //     style={styles.loginText}
+      //     onPress={() => this.props.navigation.navigate("Login")}
+      //   >
+      //     Log In
+      //   </Button>
+      //   <Button
+      //     containerStyle={styles.signupContainer}
+      //     style={styles.signupText}
+      //     onPress={() => this.props.navigation.navigate("Signup")}
+      //   >
+      //     Sign Up
+      //   </Button>
+      // </View>
+      
     );
   }
 
@@ -131,10 +155,28 @@ class WelcomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 150
-  },
+    justifyContent: 'center',
+    alignItems: 'center'
+},
+backgroundImage:{
+    flex : 1,
+    width : '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+},
+  // backgroundImage: {
+  //   flex: 1,
+  //   width: null,
+  //   height: null,
+  //   },
+  // container: {
+  //   flex: 1,
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   marginBottom: 150,
+  //   width: null,
+  //   height: null,
+  // },
   logo: {
     width: 200,
     height: 200
