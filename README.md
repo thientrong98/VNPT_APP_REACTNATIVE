@@ -45,3 +45,4 @@ Bootstrap your app development by using this awesome react native starter kit, i
 
 Coded with ❤️ by <a href="https://www.instamobile.io">Instamobile</a> and <a href="https://www.iosapptemplates.com">iOS App Templates</a>.
 "# VNPT_APP_REACTNATIVE" 
+"# VNPT_APP_REACTNATIVE" 
